@@ -20,7 +20,9 @@ async function run() {
   try {
     await client.connect();
     const database = client.db("services");
+    //////////////////////
     const servicesCollections = database.collection("service");
+    const orderCollections = database.collection("orders");
 
     // Get API
     app.get("/services", async (req, res) => {
@@ -35,10 +37,21 @@ async function run() {
       const service = await servicesCollections.findOne(query);
       res.send(service);
     });
+
+    app.get("/orders", async (req, res) => {
+      const cursor = orderCollections.find({});
+      const orders = await cursor.toArray();
+      res.send(orders);
+    });
     //post API
     app.post("/services", async (req, res) => {
       const newService = req.body;
       const result = await servicesCollections.insertOne(newService);
+      res.json(result);
+    });
+    app.post("/orders", async (req, res) => {
+      const newOrder = req.body;
+      const result = await orderCollections.insertOne(newOrder);
       res.json(result);
     });
     console.log("conneted");
