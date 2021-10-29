@@ -21,6 +21,19 @@ async function run() {
     const database = client.db("services");
     const servicesCollections = database.collection("service");
 
+    // Get API
+    app.get("/services", async (req, res) => {
+      const cursor = servicesCollections.find({});
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+    //post API
+    app.post("/services", async (req, res) => {
+      const newService = req.body;
+      const result = await servicesCollections.insertOne(newService);
+      console.log("getting data", req.body, result);
+      res.json(result);
+    });
     console.log("conneted");
   } finally {
     //   await client.close();
