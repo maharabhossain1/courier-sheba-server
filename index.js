@@ -25,6 +25,8 @@ async function run() {
     const orderCollections = database.collection("orders");
 
     // Get API
+
+    //service get
     app.get("/services", async (req, res) => {
       const cursor = servicesCollections.find({});
       const services = await cursor.toArray();
@@ -38,6 +40,7 @@ async function run() {
       res.send(service);
     });
 
+    ///////// Order Get
     app.get("/orders", async (req, res) => {
       const cursor = orderCollections.find({});
       const orders = await cursor.toArray();
@@ -50,6 +53,20 @@ async function run() {
 
       res.send(orders);
     });
+
+    app.get("/allorder", async (req, res) => {
+      const cursor = orderCollections.find({});
+      const orders = await cursor.toArray();
+      res.send(orders);
+    });
+    app.get("/allorder/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const orders = await orderCollections.findOne(query);
+      res.send(orders);
+    });
+
+    //////////
     //post API
     app.post("/services", async (req, res) => {
       const newService = req.body;
@@ -59,6 +76,16 @@ async function run() {
     app.post("/orders", async (req, res) => {
       const newOrder = req.body;
       const result = await orderCollections.insertOne(newOrder);
+      res.json(result);
+    });
+
+    //////////
+    // Delete
+    app.delete("/allorder/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollections.deleteOne(query);
+
       res.json(result);
     });
     console.log("conneted");
