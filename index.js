@@ -29,7 +29,7 @@ async function run() {
 run().catch(console.dir);
 /////////////////////////////
 app.get("/", (req, res) => {
-  res.send("runnign my code1");
+  res.send("runnign my code2");
 });
 
 app.listen(port, () => {
