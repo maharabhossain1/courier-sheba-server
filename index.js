@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
+const ObjectId = require("mongodb").ObjectId;
 
 ////////////////////////
 app.use(cors());
@@ -27,11 +28,17 @@ async function run() {
       const services = await cursor.toArray();
       res.send(services);
     });
+
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await servicesCollections.findOne(query);
+      res.send(service);
+    });
     //post API
     app.post("/services", async (req, res) => {
       const newService = req.body;
       const result = await servicesCollections.insertOne(newService);
-      console.log("getting data", req.body, result);
       res.json(result);
     });
     console.log("conneted");
