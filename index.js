@@ -78,7 +78,26 @@ async function run() {
       const result = await orderCollections.insertOne(newOrder);
       res.json(result);
     });
-
+    //////////
+    // update
+    app.put("/allorder/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedUser = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: updatedUser.status,
+        },
+      };
+      const result = await orderCollections.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log("updating", id);
+      res.json(result);
+    });
     //////////
     // Delete
     app.delete("/allorder/:id", async (req, res) => {
